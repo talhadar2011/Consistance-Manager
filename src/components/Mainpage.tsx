@@ -20,7 +20,7 @@ export default function Mainpage() {
             <div className='flex bg-white shadow-2xl rounded-lg w-full mt-10 p-10 h-full'>
                 <div className="w-[30%] ">
                     <h2 className='text-2xl font-semibold text-black'>Habbits</h2>
-                    <button onClick={()=>setaddHabbit(true)} className="bg-emerald-400 rounded p-2">Add Habbit</button>
+                    <button onClick={()=>setaddHabbit(true)} className="bg-emerald-400 rounded p-2 font-bold text-white">Add Habbit</button>
                     {addHabbit && (
                         <div>
                             <input 
