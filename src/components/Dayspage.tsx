@@ -11,25 +11,27 @@ export default function Dayspage({ habits }) {
       <div
         className="grid"
         style={{
-          gridTemplateColumns: `repeat(${daysInMonth}, 48px)`,
+          gridTemplateColumns: `repeat(${daysInMonth}, 50px)`,
+          gridAutoRows: "56px",
         }}
       >
         {/* HEADER */}
-        {Array.from({ length: daysInMonth }, (_, i) => (
-          <div
-            key={i}
-            className="mb-12 flex items-center justify-center font-semibold"
-          >
-            {i + 1}
-          </div>
-        ))}
+        {habits.length > 0 &&
+          Array.from({ length: daysInMonth }, (_, i) => (
+            <div
+              key={i}
+              className="flex items-center justify-center font-semibold"
+            >
+              {i + 1}
+            </div>
+          ))}
 
         {/* CHECKBOX ROWS */}
         {habits.map((_, habitIndex) =>
           Array.from({ length: daysInMonth }, (_, dayIndex) => (
             <div
               key={`${habitIndex}-${dayIndex}`}
-              className="mb-12.5 flex items-center justify-center"
+              className="flex items-center justify-center"
             >
               <input type="checkbox" />
             </div>
