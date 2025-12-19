@@ -1,20 +1,40 @@
 import { useState } from "react";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import DoughnutChart from "./chart";
+import HabitProgressChart from "./chart";
 
+ChartJS.register(ArcElement, Tooltip, Legend);
 export default function Mainpage() {
   const [inputValue, setInputValue] = useState("");
   const [habitList, setHabitList] = useState<string[]>([]);
-  const [addHabit, setAddHabit] = useState(false);
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") return;
+  const [graphData, setGraphData] = useState<{ habit: string; day: number }[]>([]);
+  function handleKeyDown () {
     const value = inputValue.trim();
+    console.log("Adding habit:", value);
     if (!value) return;
 
     setHabitList((prev) => [...prev, value]);
     setInputValue("");
-    setAddHabit(false);
   };
-
+  function handleGraphData(e: React.ChangeEvent<HTMLInputElement>, habit: string, day: number) {
+      
+    if (e.target.checked) {
+      setGraphData((prev) => [...prev, { habit, day }]);
+    } else {
+      setGraphData((prev) =>
+        prev.filter(
+          (item) => !(item.habit === habit && item.day === day)
+        )
+      );
+    }
+  }
+  console.log("Current graph data:", graphData);
+ 
   const now = new Date();
   const daysInMonth = new Date(
     now.getFullYear(),
@@ -28,27 +48,24 @@ export default function Mainpage() {
         Welcome to Consistence Manager
       </h1>
 
-      {/* ADD HABIT */}
-      <div className="bg-white p-4 rounded shadow mb-6 max-w-md mx-auto">
+      <div className="flex  gap-2 bg-white p-4 rounded shadow mb-6 max-w-lg mx-auto">
         <button
-          onClick={() => setAddHabit(true)}
-          className="bg-emerald-500 text-white px-4 py-2 rounded font-semibold"
+          onClick={handleKeyDown}
+          className="bg-emerald-500 text-white  p-2 rounded font-semibold pointer-cursor w-32"
         >
           Add Habit
         </button>
 
-        {addHabit && (
-          <input
+        
+           <input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={handleKeyDown}
             placeholder="Enter habit name"
-            className="mt-4 w-full border-2 border-gray-300 rounded p-2"
-          />
-        )}
+            className=" w-full border-2 border-gray-300 rounded p-2"
+          /> 
+        
       </div>
 
-      {/* HABIT TRACKER */}
       <div className="bg-white rounded shadow p-4 overflow-auto">
         <div
           className="grid gap-y-2"
@@ -57,7 +74,6 @@ export default function Mainpage() {
             gridAutoRows: "64px",
           }}
         >
-          {/* HEADER */}
           <div className="flex items-center px-4 font-bold bg-gray-100 rounded">
             Habits
           </div>
@@ -71,18 +87,28 @@ export default function Mainpage() {
             </div>
           ))}
 
-          {/* ROWS */}
           {habitList.map((habit, i) => (
             <div key={i} className="contents">
               <div className="flex items-center px-4 bg-gray-200 font-semibold rounded">
                 {habit}
               </div>
 
-              {Array.from({ length: daysInMonth }, (_, d) => (
-                <div key={d} className="flex items-center justify-center">
-                  <input type="checkbox" className="w-4 h-4" />
-                </div>
-              ))}
+               {Array.from({ length: daysInMonth }, (_, d) => {
+                const isChecked = graphData.some(
+                  (item) => item.habit === habit && item.day === d
+                );
+
+                return (
+                  <div key={d} className="flex items-center justify-center">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4"
+                      checked={isChecked}
+                      onChange={(e) => handleGraphData(e, habit, d)}
+                    />
+                  </div>
+                );
+              })}
             </div>
           ))}
 
@@ -92,6 +118,20 @@ export default function Mainpage() {
             </div>
           )}
         </div>
+      </div>
+      <div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+        {habitList.map((habit) => (
+          <HabitProgressChart
+            key={habit}
+            habit={habit}
+            graphData={graphData}
+            daysInMonth={daysInMonth}
+          />
+        ))}
+      </div>
+
       </div>
     </div>
   );
