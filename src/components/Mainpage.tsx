@@ -1,14 +1,7 @@
 import { useState } from "react";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import DoughnutChart from "./chart";
+
 import HabitProgressChart from "./chart";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
 export default function Mainpage() {
   const [inputValue, setInputValue] = useState("");
   const [habitList, setHabitList] = useState<string[]>([]);
