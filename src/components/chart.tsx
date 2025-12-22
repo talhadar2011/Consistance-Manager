@@ -18,12 +18,14 @@ type Props = {
   graphData: GraphItem[];
   daysInMonth: number;
 };
+;
 
 export default function HabitProgressChart({
   habit,
   graphData,
   daysInMonth,
 }: Props) {
+
   const completedDays = graphData.filter(
     (item) => item.habit === habit
   ).length;
@@ -49,7 +51,7 @@ export default function HabitProgressChart({
       },
     },
   };
-
+  console.log("chart loaded",graphData)
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="w-40 h-40">

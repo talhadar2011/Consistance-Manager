@@ -5,7 +5,7 @@ import HabitProgressChart from "./chart";
 export default function Mainpage() {
   const [inputValue, setInputValue] = useState("");
   const [habitList, setHabitList] = useState<string[]>([]);
-  const [graphData, setGraphData] = useState<{ habit: string; day: number }[]>([]);
+  const [graphData, setGraphData] = useState<{ habit: string; day: number[] }[]>([]);
   function handleKeyDown () {
     const value = inputValue.trim();
     console.log("Adding habit:", value);
@@ -17,11 +17,25 @@ export default function Mainpage() {
   function handleGraphData(e: React.ChangeEvent<HTMLInputElement>, habit: string, day: number) {
       
     if (e.target.checked) {
-      setGraphData((prev) => [...prev, { habit, day }]);
-    } else {
+      if (!graphData.some((item) => item.habit === habit)) {
+        setGraphData((prev) => [...prev, { habit, day: [day] }]);
+      } else {
+        setGraphData((prev) =>
+          prev.map((item) =>
+            item.habit === habit
+              ? { ...item, day: [...item.day, day] }
+              : item
+          )
+        );
+      }
+    }
+    else {
       setGraphData((prev) =>
-        prev.filter(
-          (item) => !(item.habit === habit && item.day === day)
+        prev.map(
+          (item) =>
+            item.habit === habit
+              ? { ...item, day: item.day.filter((d) => d !== day) }
+              : item
         )
       );
     }
@@ -88,7 +102,7 @@ export default function Mainpage() {
 
                {Array.from({ length: daysInMonth }, (_, d) => {
                 const isChecked = graphData.some(
-                  (item) => item.habit === habit && item.day === d
+                  (item) => item.habit === habit && item.day.includes(d)
                 );
 
                 return (
@@ -114,7 +128,7 @@ export default function Mainpage() {
       </div>
       <div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+        {/* <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-6">
         {habitList.map((habit) => (
           <HabitProgressChart
             key={habit}
@@ -123,7 +137,7 @@ export default function Mainpage() {
             daysInMonth={daysInMonth}
           />
         ))}
-      </div>
+      </div> */}
 
       </div>
     </div>
