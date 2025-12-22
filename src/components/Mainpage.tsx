@@ -128,7 +128,7 @@ export default function Mainpage() {
       </div>
       <div>
         
-        {/* <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-6">
         {habitList.map((habit) => (
           <HabitProgressChart
             key={habit}
@@ -137,7 +137,7 @@ export default function Mainpage() {
             daysInMonth={daysInMonth}
           />
         ))}
-      </div> */}
+      </div>
 
       </div>
     </div>

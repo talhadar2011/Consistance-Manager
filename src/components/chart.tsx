@@ -10,7 +10,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 type GraphItem = {
   habit: string;
-  day: number;
+  day: number[];
 };
 
 type Props = {
@@ -25,11 +25,10 @@ export default function HabitProgressChart({
   graphData,
   daysInMonth,
 }: Props) {
-
-  const completedDays = graphData.filter(
-    (item) => item.habit === habit
-  ).length;
-
+  
+  const daysCompleted =graphData.find((item) => item.habit === habit)?.day || [];
+  console.log("daysCompleted",daysCompleted)
+  const completedDays = daysCompleted.length;
   const remainingDays = daysInMonth - completedDays;
 
   const data = {
